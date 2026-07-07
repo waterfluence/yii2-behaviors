@@ -21,9 +21,6 @@ class PostModel extends ActiveRecord
         return 'Post';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
@@ -31,9 +28,6 @@ class PostModel extends ActiveRecord
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function behaviors()
     {
         return [
