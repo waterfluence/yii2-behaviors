@@ -62,7 +62,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected function destroyApplication()
     {
-        Yii::$app = null;
+        \Yii::$app = null;
     }
 
     /**
@@ -70,7 +70,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected function setupTestDbData()
     {
-        $db = Yii::$app->getDb();
+        $db = \Yii::$app->getDb();
         // Structure :
         $table = 'Post';
         $columns = [

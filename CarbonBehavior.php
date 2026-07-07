@@ -76,8 +76,6 @@ class CarbonBehavior extends Behavior
     /**
      * Convert the model's attributes to an Carbon instance.
      *
-     * @param $event
-     *
      * @return static
      */
     public function attributesToCarbon($event)
@@ -104,8 +102,6 @@ class CarbonBehavior extends Behavior
 
     /**
      * Handles owner 'beforeUpdate' event for converting attributes values to the default format
-     *
-     * @param $event
      *
      * @return bool
      */
