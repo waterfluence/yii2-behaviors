@@ -47,6 +47,15 @@ use yii\db\ActiveRecord;
 class CarbonBehavior extends Behavior
 {
     /**
+     * Timezone used when constructing Carbon instances from stored values.
+     * Dates are stored in UTC, so conversions are pinned to UTC rather than
+     * the PHP default timezone. This also makes behavior explicit across
+     * Carbon versions: Carbon 3 changed createFromTimestamp() to default to
+     * UTC, whereas Carbon 2 used the default timezone.
+     */
+    public const TIMEZONE = 'UTC';
+
+    /**
      * @var ActiveRecord the owner of this behavior
      */
     public $owner;
@@ -86,15 +95,15 @@ class CarbonBehavior extends Behavior
                 // If this value is an integer, we will assume it is a UNIX timestamp's value
                 // and format a Carbon object from this timestamp.
                 if (is_numeric($value)) {
-                    $this->owner->$attribute = Carbon::createFromTimestamp($value);
+                    $this->owner->$attribute = Carbon::createFromTimestamp($value, self::TIMEZONE);
                 }
 
                 // If the value is in simply year, month, day format, we will instantiate the
                 // Carbon instances from that format.
                 elseif (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
-                    $this->owner->$attribute = Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
+                    $this->owner->$attribute = Carbon::createFromFormat('Y-m-d', $value, self::TIMEZONE)->startOfDay();
                 } else {
-                    $this->owner->$attribute = Carbon::createFromFormat($this->dateFormat, $this->owner->$attribute);
+                    $this->owner->$attribute = Carbon::createFromFormat($this->dateFormat, $this->owner->$attribute, self::TIMEZONE);
                 }
             }
         }
