@@ -10,6 +10,12 @@ jobs:
     parameters:
       php-version:
         type: string
+      # When true, the lint/test steps are allowed to fail without failing
+      # the job. CircleCI has no native "allow failure" for jobs, so we wrap
+      # the commands in `|| true`. Used for experimental PHP versions.
+      experimental:
+        type: boolean
+        default: false
     docker:
       - image: cimg/php:<< parameters.php-version >>
     steps:
@@ -20,13 +26,28 @@ jobs:
       - run: rm composer-setup.php
       - run: sudo -E install-php-extensions dom
       - php/install-packages
-      - run: vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --dry-run --diff
-      - run: vendor/bin/phpunit --verbose
+      - when:
+          condition:
+            not: << parameters.experimental >>
+          steps:
+            - run: vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --dry-run --diff
+            - run: vendor/bin/phpunit --verbose
+      - when:
+          condition: << parameters.experimental >>
+          steps:
+            - run: vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --dry-run --diff || true
+            - run: vendor/bin/phpunit --verbose || true
 
 workflows:
   all-tests:
     jobs:
+      # Must pass.
       - test_current:
           matrix:
             parameters:
-              php-version: ["7.4", "8.0", "8.1"]
+              php-version: ["7.4", "8.1", "8.2"]
+      # Allowed to fail (experimental).
+      - test_current:
+          name: test_current-8.3-experimental
+          php-version: "8.3"
+          experimental: true
