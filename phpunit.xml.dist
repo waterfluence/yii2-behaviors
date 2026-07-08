@@ -3,7 +3,10 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="./tests/bootstrap.php"
          colors="true"
-         stopOnFailure="false">
+         stopOnFailure="false"
+         failOnWarning="true"
+         failOnNotice="true"
+         failOnDeprecation="true">
     <testsuites>
         <testsuite name="Yii2mod Test Suite">
             <directory>./tests</directory>
